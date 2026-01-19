@@ -1,0 +1,93 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - img "Pongal Background" [ref=e3]
+  - generic [ref=e5]:
+    - navigation [ref=e6]:
+      - generic [ref=e7]:
+        - link "Intellexa REC" [ref=e8] [cursor=pointer]:
+          - /url: /
+        - generic [ref=e9]:
+          - link "Home" [ref=e10] [cursor=pointer]:
+            - /url: /
+          - link "Events" [ref=e11] [cursor=pointer]:
+            - /url: /events
+          - link "News" [ref=e12] [cursor=pointer]:
+            - /url: /news
+          - link "Hackathons" [ref=e13] [cursor=pointer]:
+            - /url: /hackathons
+          - link "Team" [ref=e14] [cursor=pointer]:
+            - /url: /#team
+          - link "Roadmaps" [ref=e15] [cursor=pointer]:
+            - /url: /roadmaps
+    - main [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - img [ref=e22]
+            - generic [ref=e25]: Official Tech Club of REC
+          - heading "INTELLEXA" [level=1] [ref=e26]
+          - paragraph [ref=e27]: Innovate · Impact · Inspire
+          - paragraph [ref=e28]: The epicenter of technical excellence at Rajalakshmi Engineering College. Uniting minds in AI, Web Dev, IoT, and InfoSec to build the future.
+          - paragraph [ref=e30]: Happy Pongal! 🌾
+          - generic [ref=e31]:
+            - link "Join The Revolution" [ref=e32] [cursor=pointer]:
+              - /url: /signup
+              - generic [ref=e33]:
+                - text: Join The Revolution
+                - img [ref=e34]
+            - link "Explore Events" [ref=e37] [cursor=pointer]:
+              - /url: /events
+        - generic [ref=e38]: Scroll to discover
+      - generic [ref=e41]:
+        - generic [ref=e43]:
+          - heading "Recent Meetups" [level=2] [ref=e44]
+          - paragraph [ref=e45]: We believe in learning by doing. From intense 24-hour hackathons to casual weekend meetups, we provide the platform for students to innovate and collaborate.
+        - generic [ref=e53]:
+          - button [ref=e54]
+          - button [ref=e55]
+          - button [ref=e56]
+          - button [ref=e57]
+      - generic [ref=e60]:
+        - heading "Explore Our Domains" [level=2] [ref=e61]
+        - paragraph [ref=e62]: From coding lines to hardware wires, we cover every aspect of modern technology.
+      - generic [ref=e69]:
+        - heading "Meet The Core Team" [level=2] [ref=e70]
+        - generic [ref=e78]:
+          - img "Intellexa Core Team Group Photo" [ref=e79]
+          - generic [ref=e81]:
+            - heading "The Minds Behind Intellexa" [level=3] [ref=e82]
+            - paragraph [ref=e83]: Passionate, Dedicated, and Ready to Innovate.
+      - generic [ref=e85]:
+        - generic [ref=e86]:
+          - generic [ref=e87]:
+            - heading "Join The Revolution" [level=2] [ref=e88]
+            - paragraph [ref=e89]: Ready to innovate? Connect with us or visit our lab at Rajalakshmi Engineering College.
+            - generic [ref=e90]:
+              - generic [ref=e91]:
+                - img [ref=e92]
+                - generic [ref=e95]: intellexa@rajalakshmi.edu.in
+              - generic [ref=e96]:
+                - img [ref=e97]
+                - generic [ref=e100]: Tech Lounge, Rajalakshmi Engineering College
+          - generic [ref=e101]:
+            - heading "Connect With Us" [level=3] [ref=e102]
+            - generic [ref=e103]:
+              - link [ref=e104] [cursor=pointer]:
+                - /url: https://www.instagram.com/intellexa.rec/?hl=en
+                - img [ref=e105]
+              - link [ref=e108] [cursor=pointer]:
+                - /url: https://www.linkedin.com/company/intellexa-rec
+                - img [ref=e109]
+              - link [ref=e113] [cursor=pointer]:
+                - /url: https://github.com/Intellexa-Rec
+                - img [ref=e114]
+              - link [ref=e117] [cursor=pointer]:
+                - /url: https://www.youtube.com/@INTELLEXAREC
+                - img [ref=e118]
+        - generic [ref=e121]: © 2026 Intellexa REC. All rights reserved.
+  - button "Open Next.js Dev Tools" [ref=e127] [cursor=pointer]:
+    - img [ref=e128]
+  - alert [ref=e131]
+```

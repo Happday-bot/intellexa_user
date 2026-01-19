@@ -1,0 +1,41 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - img "Pongal Background" [ref=e3]
+  - generic [ref=e9] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e10]:
+      - img [ref=e11]
+    - generic [ref=e14]:
+      - button "Open issues overlay" [ref=e15]:
+        - generic [ref=e16]:
+          - generic [ref=e17]: "0"
+          - generic [ref=e18]: "1"
+        - generic [ref=e19]: Issue
+      - button "Collapse issues badge" [ref=e20]:
+        - img [ref=e21]
+  - alert [ref=e23]
+  - generic [ref=e27]:
+    - generic [ref=e28]:
+      - heading "Welcome Back" [level=1] [ref=e29]
+      - paragraph [ref=e30]: Enter your credentials to access the portal
+    - generic [ref=e31]: Failed to fetch
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - text: Username
+        - generic [ref=e34]:
+          - img [ref=e35]
+          - textbox "Enter username" [ref=e38]: admin
+      - generic [ref=e39]:
+        - text: Password
+        - generic [ref=e40]:
+          - img [ref=e41]
+          - textbox "Enter password" [ref=e44]: admin123
+      - button "Sign In" [ref=e45]:
+        - text: Sign In
+        - img [ref=e46]
+    - generic [ref=e48]:
+      - text: Don't have an account?
+      - link "Create Student Account" [ref=e49] [cursor=pointer]:
+        - /url: /signup
+```
