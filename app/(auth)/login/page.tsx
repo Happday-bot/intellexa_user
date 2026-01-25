@@ -6,6 +6,7 @@ import { GlassCard } from "@/app/components/ui/GlassCard";
 import { Lock, User, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { API_BASE_URL } from "@/app/config/api";
 
 export default function LoginPage() {
     const { login } = useAuth();
@@ -19,8 +20,7 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
-            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const res = await fetch(`${API_URL}/api/auth/login`, {
+            const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",

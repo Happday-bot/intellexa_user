@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { GlassCard } from "@/app/components/ui/GlassCard";
+import { API_BASE_URL } from "@/app/config/api";
 import { clubDomains } from "@/app/data/clubData";
 import * as Icons from "lucide-react";
 import Image from "next/image";
@@ -12,8 +13,7 @@ export function Activities() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-        fetch(`${API_URL}/api/domains`)
+        fetch(`${API_BASE_URL}/api/domains`)
             .then(res => res.json())
             .then(data => {
                 setDomains(data);

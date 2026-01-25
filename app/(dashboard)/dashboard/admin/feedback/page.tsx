@@ -6,6 +6,7 @@ import { GlassCard } from "@/app/components/ui/GlassCard";
 // import { feedbackData } from "@/app/data/feedbackData"; // REMOVED MOCK
 import { events } from "@/app/data/clubData";
 import { Star, MessageSquare, TrendingUp, AlertCircle } from "lucide-react";
+import { API_BASE_URL } from "@/app/config/api";
 
 interface FeedbackItem {
     id: string;
@@ -21,7 +22,7 @@ export default function AdminFeedbackPage() {
     const [feedbackData, setFeedbackData] = useState<FeedbackItem[]>([]);
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/feedback')
+        fetch(`${API_BASE_URL}/api/feedback`)
             .then(res => res.json())
             .then(data => {
                 if (Array.isArray(data)) {

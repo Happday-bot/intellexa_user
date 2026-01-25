@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { GlassCard } from "@/app/components/ui/GlassCard";
+import { API_BASE_URL } from "@/app/config/api";
 import { coreMembers } from "@/app/data/clubData";
 import Image from "next/image";
 import { useState, useEffect } from "react";
@@ -11,8 +12,7 @@ export function CoreMembers() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-        fetch(`${API_URL}/api/core-members`)
+        fetch(`${API_BASE_URL}/api/core-members`)
             .then(res => res.json())
             .then(data => {
                 setMembers(data);

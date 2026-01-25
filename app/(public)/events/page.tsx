@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/app/context/AuthContext";
 import { useState, useEffect } from "react";
+import { API_BASE_URL } from "@/app/config/api";
 
 export default function EventsPage() {
     const { user } = useAuth();
@@ -18,12 +19,12 @@ export default function EventsPage() {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const res = await fetch("http://localhost:8000/api/events");
+                const res = await fetch(`${API_BASE_URL}/api/events`);
                 const data = await res.json();
                 setEventsData(data);
 
                 if (user) {
-                    const ticketsRes = await fetch(`http://localhost:8000/api/tickets/${user.id}`);
+                    const ticketsRes = await fetch(`${API_BASE_URL}/api/tickets/${user.id}`);
                     const ticketsData = await ticketsRes.json();
                     setUserTickets(ticketsData);
                 }
@@ -80,8 +81,8 @@ export default function EventsPage() {
                                     <div className="p-6 flex-1 flex flex-col">
                                         <div className="flex items-center justify-between mb-4">
                                             <span className={`text-xs font-bold px-2 py-1 rounded ${event.status === 'Upcoming' ? 'bg-green-500/20 text-green-400' :
-                                                    event.status === 'Today' ? 'bg-primary/20 text-primary animate-pulse' :
-                                                        'bg-gray-500/20 text-gray-400'
+                                                event.status === 'Today' ? 'bg-primary/20 text-primary animate-pulse' :
+                                                    'bg-gray-500/20 text-gray-400'
                                                 }`}>
                                                 {event.status}
                                             </span>

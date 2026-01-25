@@ -6,6 +6,7 @@ import { X, CheckCircle, AlertCircle, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/app/context/AuthContext";
 import Link from "next/link";
+import { API_BASE_URL } from "@/app/config/api";
 
 interface Props {
     isOpen: boolean;
@@ -31,7 +32,7 @@ export function RegistrationModal({ isOpen, onClose, eventId, eventTitle }: Prop
         setError(null);
 
         try {
-            const res = await fetch("http://localhost:8000/api/events/register", {
+            const res = await fetch(`${API_BASE_URL}/api/events/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

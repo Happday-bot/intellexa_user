@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard } from "@/app/components/ui/GlassCard";
 import { Layers, BarChart3, Camera, Plus, Trash2, Edit2, X, Globe, Save, ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import { API_BASE_URL } from "@/app/config/api";
 
 type Section = "domains" | "stats" | "meetups";
 
@@ -27,9 +28,9 @@ export default function SiteDataManagerPage() {
         setLoading(true);
         try {
             const [domainsRes, statsRes, meetupsRes] = await Promise.all([
-                fetch("http://localhost:8000/api/domains"),
-                fetch("http://localhost:8000/api/stats"),
-                fetch("http://localhost:8000/api/meetups")
+                fetch(`${API_BASE_URL}/api/domains`),
+                fetch(`${API_BASE_URL}/api/stats`),
+                fetch(`${API_BASE_URL}/api/meetups`)
             ]);
             setData({
                 domains: await domainsRes.json(),
@@ -66,7 +67,7 @@ export default function SiteDataManagerPage() {
         const isEdit = originalId !== undefined;
         const method = isEdit ? "PUT" : "POST";
 
-        let url = `http://localhost:8000/api/${type}`;
+        let url = `${API_BASE_URL}/api/${type}`;
         if (isEdit) {
             url += `/${encodeURIComponent(String(originalId))}`;
         }
@@ -89,7 +90,7 @@ export default function SiteDataManagerPage() {
     const handleDelete = async (type: Section, id: string | number) => {
         if (!confirm(`Delete this ${type.slice(0, -1)}?`)) return;
         try {
-            const res = await fetch(`http://localhost:8000/api/${type}/${id}`, { method: "DELETE" });
+            const res = await fetch(`${API_BASE_URL}/api/${type}/${id}`, { method: "DELETE" });
             if (res.ok) fetchAllData();
         } catch (err) {
             console.error(`Failed to delete ${type}:`, err);

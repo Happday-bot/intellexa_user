@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard } from "@/app/components/ui/GlassCard";
 import { Plus, Edit2, Trash2, Calendar, MapPin, Globe, Trophy, ExternalLink, X, Image as ImageIcon, ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import { API_BASE_URL } from "@/app/config/api";
 
 interface Hackathon {
     id: number;
@@ -44,7 +45,7 @@ export default function HackathonManagerPage() {
 
     const fetchHackathons = async () => {
         try {
-            const res = await fetch("http://localhost:8000/api/hackathons");
+            const res = await fetch(`${API_BASE_URL}/api/hackathons`);
             const data = await res.json();
             setHackathons(data);
         } catch (err) {
@@ -80,8 +81,8 @@ export default function HackathonManagerPage() {
         e.preventDefault();
         const method = editingItem ? "PUT" : "POST";
         const url = editingItem
-            ? `http://localhost:8000/api/hackathons/${editingItem.id}`
-            : "http://localhost:8000/api/hackathons";
+            ? `${API_BASE_URL}/api/hackathons/${editingItem.id}`
+            : `${API_BASE_URL}/api/hackathons`;
 
         try {
             const res = await fetch(url, {
@@ -101,7 +102,7 @@ export default function HackathonManagerPage() {
     const handleDelete = async (id: number) => {
         if (!confirm("Remove this hackathon?")) return;
         try {
-            const res = await fetch(`http://localhost:8000/api/hackathons/${id}`, { method: "DELETE" });
+            const res = await fetch(`${API_BASE_URL}/api/hackathons/${id}`, { method: "DELETE" });
             if (res.ok) fetchHackathons();
         } catch (err) {
             console.error("Failed to delete hackathon:", err);

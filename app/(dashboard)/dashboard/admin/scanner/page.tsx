@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard } from "@/app/components/ui/GlassCard";
 import { ChevronLeft, Scan, CheckCircle2, XCircle, Loader2, Camera, History, Power } from "lucide-react";
 import Link from "next/link";
+import { API_BASE_URL } from "@/app/config/api";
 
 interface ScanResult {
     success: boolean;
@@ -62,7 +63,7 @@ export default function TicketScannerPage() {
         console.log("Scanner component mounted.");
 
         // Fetch recent check-ins for history
-        fetch("http://localhost:8000/api/admin/check-ins")
+        fetch(`${API_BASE_URL}/api/admin/check-ins`)
             .then(res => res.json())
             .then(data => {
                 if (isMounted.current) setHistory(data.slice(-5).reverse());
@@ -117,7 +118,7 @@ export default function TicketScannerPage() {
 
             const data = JSON.parse(decodedText);
 
-            const response = await fetch("http://localhost:8000/api/check-in", {
+            const response = await fetch(`${API_BASE_URL}/api/check-in`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

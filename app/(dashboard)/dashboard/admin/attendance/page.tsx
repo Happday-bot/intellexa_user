@@ -18,6 +18,7 @@ import {
     Mail
 } from "lucide-react";
 import Link from "next/link";
+import { API_BASE_URL } from "@/app/config/api";
 
 interface Event {
     id: number;
@@ -52,7 +53,7 @@ export default function AttendanceAnalysisPage() {
     const [addingStudent, setAddingStudent] = useState(false);
 
     useEffect(() => {
-        fetch("http://localhost:8000/api/events")
+        fetch(`${API_BASE_URL}/api/events`)
             .then(res => res.json())
             .then(data => {
                 setEvents(data);
@@ -72,7 +73,7 @@ export default function AttendanceAnalysisPage() {
 
     const fetchAttendance = (eventId: number) => {
         setDetailLoading(true);
-        fetch(`http://localhost:8000/api/admin/attendance/${eventId}`)
+        fetch(`${API_BASE_URL}/api/admin/attendance/${eventId}`)
             .then(res => res.json())
             .then(data => {
                 setAttendance(data);
@@ -86,7 +87,7 @@ export default function AttendanceAnalysisPage() {
 
     const handleManualCheckin = async (studentId: string) => {
         try {
-            const response = await fetch("http://localhost:8000/api/admin/check-in/manual", {
+            const response = await fetch(`${API_BASE_URL}/api/admin/check-in/manual`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -110,7 +111,7 @@ export default function AttendanceAnalysisPage() {
     const openAddStudentModal = async () => {
         setShowAddModal(true);
         try {
-            const response = await fetch("http://localhost:8000/api/users");
+            const response = await fetch(`${API_BASE_URL}/api/users`);
             const users = await response.json();
             // Filter to only students
             const students = users.filter((u: any) => u.role === "student");
@@ -123,7 +124,7 @@ export default function AttendanceAnalysisPage() {
     const handleAddStudent = async (studentId: string) => {
         setAddingStudent(true);
         try {
-            const response = await fetch("http://localhost:8000/api/admin/register-student", {
+            const response = await fetch(`${API_BASE_URL}/api/admin/register-student`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -463,8 +464,8 @@ export default function AttendanceAnalysisPage() {
                                                 <div
                                                     key={student.id}
                                                     className={`p-4 rounded-2xl border transition-all ${isRegistered
-                                                            ? 'bg-green-500/5 border-green-500/20 opacity-50'
-                                                            : 'bg-white/5 border-white/10 hover:border-blue-500/50'
+                                                        ? 'bg-green-500/5 border-green-500/20 opacity-50'
+                                                        : 'bg-white/5 border-white/10 hover:border-blue-500/50'
                                                         }`}
                                                 >
                                                     <div className="flex items-center justify-between">

@@ -61,6 +61,8 @@ class NewsItem(BaseModel):
     date: str
     image: str
     summary: str
+    content: Optional[str] = None
+    link: Optional[str] = None
 
 
 class CodeQuestion(BaseModel):
@@ -151,8 +153,8 @@ class EventRegistration(BaseModel):
 
 
 class TeamContact(BaseModel):
-    name: str
-    email: str
+    name: Optional[str] = None
+    email: Optional[str] = None
 
 
 class TeamFinderPost(BaseModel):
@@ -186,7 +188,7 @@ class AdminStats(BaseModel):
 class User(BaseModel):
     id: Optional[str] = None
     username: str
-    password: str
+    password: Optional[str] = None
     role: str  # 'admin' | 'student'
     name: str
     email: str

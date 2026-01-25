@@ -6,6 +6,7 @@ import { GlassCard } from "@/app/components/ui/GlassCard";
 import { Plus, Search, UserPlus, Trash2, Edit2, Shield, X, Image as ImageIcon, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { API_BASE_URL } from "@/app/config/api";
 
 interface Member {
     name: string;
@@ -35,7 +36,7 @@ export default function MemberDatabasePage() {
 
     const fetchMembers = async () => {
         try {
-            const res = await fetch("http://localhost:8000/api/core-members");
+            const res = await fetch(`${API_BASE_URL}/api/core-members`);
             const data = await res.json();
             setMembers(data);
         } catch (err) {
@@ -65,8 +66,8 @@ export default function MemberDatabasePage() {
         e.preventDefault();
         const method = editingMember ? "PUT" : "POST";
         const url = editingMember
-            ? `http://localhost:8000/api/core-members/${encodeURIComponent(editingMember.name)}`
-            : "http://localhost:8000/api/core-members";
+            ? `${API_BASE_URL}/api/core-members/${encodeURIComponent(editingMember.name)}`
+            : `${API_BASE_URL}/api/core-members`;
 
         try {
             const res = await fetch(url, {
@@ -86,7 +87,7 @@ export default function MemberDatabasePage() {
     const handleDelete = async (name: string) => {
         if (!confirm(`Remove ${name} from core team?`)) return;
         try {
-            const res = await fetch(`http://localhost:8000/api/core-members/${encodeURIComponent(name)}`, { method: "DELETE" });
+            const res = await fetch(`${API_BASE_URL}/api/core-members/${encodeURIComponent(name)}`, { method: "DELETE" });
             if (res.ok) fetchMembers();
         } catch (err) {
             console.error("Failed to delete member:", err);

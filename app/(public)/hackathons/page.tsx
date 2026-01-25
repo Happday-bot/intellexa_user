@@ -6,13 +6,14 @@ import { TiltCard } from "@/app/components/ui/TiltCard";
 import { Calendar, MapPin, Trophy, ExternalLink, Globe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { API_BASE_URL } from "@/app/config/api";
 
 export default function HackathonsPage() {
     const [hackathons, setHackathons] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch("http://localhost:8000/api/hackathons")
+        fetch(`${API_BASE_URL}/api/hackathons`)
             .then(res => res.json())
             .then(data => {
                 setHackathons(data);

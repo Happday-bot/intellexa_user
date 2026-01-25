@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { GlassCard } from "@/app/components/ui/GlassCard";
 import { X } from "lucide-react";
 import { useState } from "react";
+import { API_BASE_URL } from "@/app/config/api";
 
 interface Props {
   isOpen: boolean;
@@ -40,7 +41,7 @@ export function CreateTeamPostModal({ isOpen, onClose }: Props) {
     };
 
     try {
-      await fetch("http://localhost:8000/api/team-finder", {
+      await fetch(`${API_BASE_URL}/api/team-finder`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)

@@ -5,6 +5,7 @@ import { GlassCard } from "@/app/components/ui/GlassCard";
 import { Users, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { API_BASE_URL } from "@/app/config/api";
 import { CreateTeamPostModal } from "@/app/components/forms/CreateTeamPostModal";
 
 /* ----------------------------------------
@@ -49,24 +50,24 @@ export default function TeamFinderPage() {
   ----------------------------------------- */
   const fetchPosts = async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/team-finder");
+      const res = await fetch(`${API_BASE_URL}/api/team-finder`);
       const data = await res.json();
       // Ensure data is an array and clean up MongoDB _id fields
-      const cleanedData = Array.isArray(data) 
+      const cleanedData = Array.isArray(data)
         ? data.map((post: any) => {
-            // Ensure skills is always an array
-            let skills = post.skills || [];
-            if (typeof skills === "string") {
-              // If skills is a string, split it by comma
-              skills = skills.split(",").map((s: string) => s.trim()).filter(Boolean);
-            }
-            
-            return {
-              ...post,
-              skills,
-              contact: post.contact || { name: "Unknown", email: "N/A" }
-            };
-          })
+          // Ensure skills is always an array
+          let skills = post.skills || [];
+          if (typeof skills === "string") {
+            // If skills is a string, split it by comma
+            skills = skills.split(",").map((s: string) => s.trim()).filter(Boolean);
+          }
+
+          return {
+            ...post,
+            skills,
+            contact: post.contact || { name: "Unknown", email: "N/A" }
+          };
+        })
         : [];
       setPosts(cleanedData);
     } catch (err) {
@@ -176,10 +177,9 @@ export default function TeamFinderPage() {
                     onClick={() => handleJoinRequest(post)}
                     disabled={requested[post.id]}
                     className={`w-full mt-4 flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors font-semibold text-sm
-                      ${
-                        requested[post.id]
-                          ? "bg-green-600/20 text-green-400 cursor-not-allowed"
-                          : "bg-white/10 hover:bg-white/20"
+                      ${requested[post.id]
+                        ? "bg-green-600/20 text-green-400 cursor-not-allowed"
+                        : "bg-white/10 hover:bg-white/20"
                       }`}
                   >
                     <Users className="w-4 h-4" />

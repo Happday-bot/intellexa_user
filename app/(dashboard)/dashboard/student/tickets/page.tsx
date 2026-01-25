@@ -7,6 +7,7 @@ import { ChevronLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/app/context/AuthContext";
+import { API_BASE_URL } from "@/app/config/api";
 
 export default function MyTicketsPage() {
     const { user } = useAuth();
@@ -16,11 +17,11 @@ export default function MyTicketsPage() {
     useEffect(() => {
         if (user) {
             // Fetch tickets for the student
-            fetch(`http://localhost:8000/api/tickets/${user.id}`)
+            fetch(`${API_BASE_URL}/api/tickets/${user.id}`)
                 .then(res => res.json())
                 .then(async (ticketData) => {
                     // Fetch all events to map ticket eventId to event details
-                    const eventsRes = await fetch("http://localhost:8000/api/events");
+                    const eventsRes = await fetch(`${API_BASE_URL}/api/events`);
                     const allEvents = await eventsRes.json();
 
                     const enrichedTickets = ticketData.map((t: any) => ({

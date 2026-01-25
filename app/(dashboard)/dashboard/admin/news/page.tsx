@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard } from "@/app/components/ui/GlassCard";
 import { Plus, Edit2, Trash2, Calendar, Newspaper, X, Image as ImageIcon, Search, ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import { API_BASE_URL } from "@/app/config/api";
 
 interface NewsItem {
     id: number;
@@ -13,6 +14,8 @@ interface NewsItem {
     date: string;
     image: string;
     summary: string;
+    content?: string;
+    link?: string;
 }
 
 export default function NewsManagerPage() {
@@ -28,7 +31,9 @@ export default function NewsManagerPage() {
         category: "AI",
         date: "",
         image: "",
-        summary: ""
+        summary: "",
+        content: "",
+        link: ""
     });
 
     useEffect(() => {
@@ -37,7 +42,7 @@ export default function NewsManagerPage() {
 
     const fetchNews = async () => {
         try {
-            const res = await fetch("http://localhost:8000/api/news");
+            const res = await fetch(`${API_BASE_URL}/api/news`);
             const data = await res.json();
             setNews(data);
         } catch (err) {
@@ -59,7 +64,9 @@ export default function NewsManagerPage() {
                 category: "AI",
                 date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
                 image: "https://images.unsplash.com/photo-1504711434969-e33886168f5c",
-                summary: ""
+                summary: "",
+                content: "",
+                link: ""
             });
         }
         setIsModalOpen(true);
@@ -69,8 +76,8 @@ export default function NewsManagerPage() {
         e.preventDefault();
         const method = editingItem ? "PUT" : "POST";
         const url = editingItem
-            ? `http://localhost:8000/api/news/${editingItem.id}`
-            : "http://localhost:8000/api/news";
+            ? `${API_BASE_URL}/api/news/${editingItem.id}`
+            : `${API_BASE_URL}/api/news`;
 
         try {
             const res = await fetch(url, {
@@ -90,7 +97,7 @@ export default function NewsManagerPage() {
     const handleDelete = async (id: number) => {
         if (!confirm("Are you sure you want to delete this news item?")) return;
         try {
-            const res = await fetch(`http://localhost:8000/api/news/${id}`, { method: "DELETE" });
+            const res = await fetch(`${API_BASE_URL}/api/news/${id}`, { method: "DELETE" });
             if (res.ok) fetchNews();
         } catch (err) {
             console.error("Failed to delete news:", err);
@@ -224,8 +231,12 @@ export default function NewsManagerPage() {
                                             <input type="text" value={formData.image} onChange={e => setFormData({ ...formData, image: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl p-3.5 focus:border-primary/50 outline-none transition-all" placeholder="https://..." />
                                         </div>
                                         <div className="md:col-span-2">
-                                            <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-1.5 block">Summary / Teaser</label>
-                                            <textarea required rows={4} value={formData.summary} onChange={e => setFormData({ ...formData, summary: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl p-3.5 focus:border-primary/50 outline-none transition-all resize-none" placeholder="Provide a brief summary of the news story..." />
+                                            <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-1.5 block">External News Link (Optional)</label>
+                                            <input type="text" value={formData.link} onChange={e => setFormData({ ...formData, link: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl p-3.5 focus:border-primary/50 outline-none transition-all" placeholder="https://www.revolgy.com/..." />
+                                        </div>
+                                        <div className="md:col-span-2">
+                                            <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-1.5 block">Full Article Content (Optional)</label>
+                                            <textarea rows={6} value={formData.content} onChange={e => setFormData({ ...formData, content: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl p-3.5 focus:border-primary/50 outline-none transition-all resize-none" placeholder="Detailed story content goes here..." />
                                         </div>
                                     </div>
                                     <div className="flex gap-4 pt-4">

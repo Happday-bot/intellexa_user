@@ -6,6 +6,7 @@ import { events } from "@/app/data/clubData";
 import { Star, Send, ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
+import { API_BASE_URL } from "@/app/config/api";
 
 export default function FeedbackPage() {
     const pastEvents = events.filter(e => e.status === 'Past');
@@ -18,7 +19,7 @@ export default function FeedbackPage() {
     const handleRate = async (eventId: number, rating: number) => {
         setRatings(prev => ({ ...prev, [eventId]: rating }));
         try {
-            await fetch('http://localhost:8000/api/feedback', {
+            await fetch(`${API_BASE_URL}/api/feedback`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -38,7 +39,7 @@ export default function FeedbackPage() {
         if (!suggestion.trim()) return;
 
         try {
-            await fetch('http://localhost:8000/api/feedback', {
+            await fetch(`${API_BASE_URL}/api/feedback`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

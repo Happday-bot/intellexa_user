@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { API_BASE_URL } from "@/app/config/api";
 import { useState, useEffect } from "react";
 import { Trophy, Users, Calendar, ArrowRight } from "lucide-react";
 import { GlassCard } from "@/app/components/ui/GlassCard";
@@ -48,9 +49,8 @@ export function Achievements() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-        const fetchStats = fetch(`${API_URL}/api/stats`).then(res => res.json());
-        const fetchMeetups = fetch(`${API_URL}/api/meetups`).then(res => res.json());
+        const fetchStats = fetch(`${API_BASE_URL}/api/stats`).then(res => res.json());
+        const fetchMeetups = fetch(`${API_BASE_URL}/api/meetups`).then(res => res.json());
 
         Promise.all([fetchStats, fetchMeetups])
             .then(([s, m]) => {

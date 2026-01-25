@@ -3,6 +3,7 @@
 import { GlassCard } from "@/app/components/ui/GlassCard";
 import { Radio, Send } from "lucide-react";
 import { useState, useEffect } from "react";
+import { API_BASE_URL } from "@/app/config/api";
 
 export default function BroadcastPage() {
     const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ export default function BroadcastPage() {
 
     const fetchBroadcasts = async () => {
         try {
-            const res = await fetch("http://localhost:8000/api/broadcasts");
+            const res = await fetch(`${API_BASE_URL}/api/broadcasts`);
             const data = await res.json();
             setBroadcasts(data);
         } catch (err) {
@@ -34,7 +35,7 @@ export default function BroadcastPage() {
         if (!formData.subject || !formData.message) return alert("Please fill all fields");
         setLoading(true);
         try {
-            const res = await fetch("http://localhost:8000/api/broadcasts", {
+            const res = await fetch(`${API_BASE_URL}/api/broadcasts`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData)

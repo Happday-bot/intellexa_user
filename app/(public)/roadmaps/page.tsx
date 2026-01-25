@@ -7,6 +7,7 @@ import { CheckCircle2, ChevronRight, ExternalLink, PlayCircle, BookOpen, Layers 
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { API_BASE_URL } from "@/app/config/api";
 
 export default function RoadmapsPage() {
     const [roadmaps, setRoadmaps] = useState<any[]>([]);
@@ -14,7 +15,7 @@ export default function RoadmapsPage() {
     const [activeTab, setActiveTab] = useState<string | null>(null);
 
     useEffect(() => {
-        fetch("http://localhost:8000/api/roadmaps")
+        fetch(`${API_BASE_URL}/api/roadmaps`)
             .then(res => res.json())
             .then(data => {
                 setRoadmaps(data);

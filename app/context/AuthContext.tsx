@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { API_BASE_URL } from "@/app/config/api";
 
 interface User {
     id: string;
@@ -38,8 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // 2. Silent Refresh - Get new access token using refresh token cookie
         const checkSession = async () => {
             try {
-                const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-                const res = await fetch(`${API_URL}/api/auth/refresh`, {
+                const res = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
                     method: "POST",
                     credentials: "include" // Send refresh token cookie
                 });
@@ -82,10 +82,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     };
 
+
+
     const logout = async () => {
         try {
-            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            await fetch(`${API_URL}/api/auth/logout`, {
+            await fetch(`${API_BASE_URL}/api/auth/logout`, {
                 method: "POST",
                 credentials: "include" // Clear refresh token cookie
             });

@@ -15,6 +15,7 @@ import Script from "next/script";
 import { cn } from "@/lib/utils";
 import { codeQuestions, type Language, type CodeQuestion } from "@/app/data/codeData";
 import { useAuth } from "@/app/context/AuthContext";
+import { API_BASE_URL } from "@/app/config/api";
 
 import dynamic from "next/dynamic";
 
@@ -46,7 +47,7 @@ export default function CodeAndConquer() {
     const { user } = useAuth();
 
     useEffect(() => {
-        fetch("http://localhost:8000/api/code-challenges")
+        fetch(`${API_BASE_URL}/api/code-challenges`)
             .then(res => res.json())
             .then(data => {
                 setQuestions(data);
@@ -59,7 +60,7 @@ export default function CodeAndConquer() {
             });
 
         if (user) {
-            fetch(`http://localhost:8000/api/progress/${user.id}`)
+            fetch(`${API_BASE_URL}/api/progress/${user.id}`)
                 .then(res => res.json())
                 .then(data => setUserProgress(data))
                 .catch(err => console.error("Failed to fetch user progress:", err));
@@ -263,7 +264,7 @@ def evaluate_code(code, inputs, expected_outputs):
                 });
 
                 if (isSuccess && user && selectedQuestion) {
-                    await fetch("http://localhost:8000/api/progress/update", {
+                    await fetch(`${API_BASE_URL}/api/progress/update`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ userId: user.id, questionId: selectedQuestion.id })
@@ -331,7 +332,7 @@ def evaluate_code(code, inputs, expected_outputs):
 
         setSubmitting(true);
         try {
-            const res = await fetch("http://localhost:8000/api/progress/update", {
+            const res = await fetch(`${API_BASE_URL}/api/progress/update`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

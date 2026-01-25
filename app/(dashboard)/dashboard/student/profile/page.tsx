@@ -11,6 +11,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { API_BASE_URL } from "@/app/config/api";
 
 // Expanded Color Palette
 const BANNER_THEMES = [
@@ -64,7 +65,7 @@ export default function ProfilePage() {
 
     useEffect(() => {
         if (user) {
-            fetch(`http://localhost:8000/api/users/${user.id}`)
+            fetch(`${API_BASE_URL}/api/users/${user.id}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data) {
@@ -93,13 +94,27 @@ export default function ProfilePage() {
         if (!user || !profile) return;
         setSaving(true);
         try {
+            // Explicitly include only fields that exist in the backend User model
             const updatedUser = {
-                ...profile,
+                id: profile.id,
+                username: profile.username,
+                role: profile.role,
+                name: profile.name,
+                email: profile.email,
+                description: profile.bio || profile.description,
                 skills: skills,
-                description: profile.bio
+                college: profile.college,
+                department: profile.department,
+                year: profile.year,
+                location: profile.location,
+                bannerTheme: profile.bannerTheme,
+                avatar: profile.avatar,
+                resumeUrl: profile.resumeUrl,
+                resumeName: profile.resumeName,
+                title: profile.title
             };
 
-            const res = await fetch(`http://localhost:8000/api/users/${user.id}`, {
+            const res = await fetch(`${API_BASE_URL}/api/users/${user.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updatedUser)
@@ -113,9 +128,14 @@ export default function ProfilePage() {
                     joinDate: raw.createdAt || profile.joinDate
                 });
                 setIsEditing(false);
+                alert("Profile updated successfully!");
+            } else {
+                const error = await res.json();
+                alert(`Failed to save: ${error.detail || "Unknown error"}`);
             }
         } catch (err) {
             console.error("Failed to save profile:", err);
+            alert("An error occurred while saving profile.");
         } finally {
             setSaving(false);
         }
@@ -147,7 +167,7 @@ export default function ProfilePage() {
         formData.append("file", file);
 
         try {
-            const res = await fetch(`http://localhost:8000/api/users/${user.id}/resume`, {
+            const res = await fetch(`${API_BASE_URL}/api/upload-resume/${user.id}`, {
                 method: "POST",
                 body: formData
             });
@@ -565,7 +585,7 @@ export default function ProfilePage() {
                                         </div>
                                     </div>
                                     <a
-                                        href={`http://localhost:8000/api/users/${user?.id}/resume/download`}
+                                        href={`${API_BASE_URL}/api/users/${user?.id}/resume/download`}
                                         className="p-2 hover:bg-white/10 rounded-full transition-colors text-dim hover:text-white"
                                         title="Download Resume"
                                     >
@@ -574,7 +594,7 @@ export default function ProfilePage() {
                                 </div>
 
                                 <a
-                                    href={`http://localhost:8000/api/users/${user?.id}/resume/download`}
+                                    href={`${API_BASE_URL}/api/users/${user?.id}/resume/download`}
                                     className="w-full py-3 rounded-xl bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-all flex items-center justify-center gap-2 font-bold group shadow-lg"
                                 >
                                     <Download className="w-5 h-5 group-hover:scale-110 transition-transform" />

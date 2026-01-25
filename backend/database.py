@@ -117,6 +117,10 @@ class MongoDB:
     def update_one(self, collection_name, query, data):
         coll = self.get_collection(collection_name)
         if coll is not None:
+            # We must remove _id from data if it exists, as MongoDB doesn't allow updating it
+            if "_id" in data:
+                data = data.copy()
+                data.pop("_id")
             # We use $set to only update provided fields
             res = coll.update_one(query, {"$set": data})
             return res.modified_count
@@ -126,6 +130,10 @@ class MongoDB:
         """Replace entire document"""
         coll = self.get_collection(collection_name)
         if coll is not None:
+            # We must remove _id from data if it exists, as MongoDB doesn't allow updating it
+            if "_id" in data:
+                data = data.copy()
+                data.pop("_id")
             res = coll.replace_one(query, data)
             return res.modified_count
         return 0
@@ -155,58 +163,3 @@ class MongoDB:
 
 # Singleton instance
 db = MongoDB()
-
-def migrate_from_json():
-    """Seed MongoDB with data from JSON files if collections are empty."""
-    json_mapping = {
-        "events": "events.json",
-        "news": "news.json",
-        "code_challenges": "code_challenges.json",
-        "hackathons": "hackathons.json",
-        "roadmaps": "roadmaps.json",
-        "domains": "domains.json",
-        "stats": "stats.json",
-        "meetups": "meetups.json",
-        "broadcasts": "broadcasts.json",
-        "feedback": "feedback.json",
-        "team_finder": "team_finder.json",
-        "users": "users.json",
-        "core_members": "core_members.json",
-        "volunteers": "volunteers.json",
-        "progress": "progress.json",
-        "tickets": "tickets.json",
-        "checkins": "checkins.json"
-    }
-    
-    for coll_name, file_name in json_mapping.items():
-        if os.path.exists(file_name):
-            coll = db.get_collection(coll_name)
-            if coll.count_documents({}) == 0:
-                print(f"Migrating {file_name} to collection {coll_name}...")
-                try:
-                    with open(file_name, "r", encoding='utf-8') as f:
-                        data = json.load(f)
-                        if isinstance(data, list) and data:
-                            coll.insert_many(data)
-                        elif isinstance(data, dict) and data:
-                            # progress.json is a dict userId -> progress
-                            # For MongoDB, we should probably store them as docs with userId field
-                            if coll_name == "progress":
-                                docs = []
-                                for uid, progress in data.items():
-                                    progress["userId"] = uid
-                                    docs.append(progress)
-                                if docs:
-                                    coll.insert_many(docs)
-                            else:
-                                coll.insert_one(data)
-                    print(f"✓ Migrated {coll_name}")
-                except Exception as e:
-                    print(f"✗ Error migrating {coll_name}: {e}")
-            else:
-                print(f"Skipping {coll_name} (already has data)")
-        else:
-            print(f"Skipping {coll_name} (JSON file not found)")
-
-if __name__ == "__main__":
-    migrate_from_json()

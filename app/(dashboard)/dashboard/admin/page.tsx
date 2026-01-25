@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { API_BASE_URL } from "@/app/config/api";
 
 const adminApps = [
     {
@@ -141,7 +142,7 @@ export default function AdminDashboard() {
     });
 
     useEffect(() => {
-        fetch("http://localhost:8000/api/admin/stats")
+        fetch(`${API_BASE_URL}/api/admin/stats`)
             .then(res => {
                 if (!res.ok) throw new Error("Stats fetch failed");
                 return res.json();

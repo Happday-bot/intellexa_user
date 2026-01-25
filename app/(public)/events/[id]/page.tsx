@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { RegistrationModal } from "@/app/components/forms/RegistrationModal";
 import { useAuth } from "@/app/context/AuthContext";
 import { Ticket } from "lucide-react";
+import { API_BASE_URL } from "@/app/config/api";
 
 export default function EventDetailsPage() {
     const params = useParams();
@@ -27,7 +28,7 @@ export default function EventDetailsPage() {
         const fetchData = async () => {
             try {
                 // Fetch event details (with dynamic slotsFilled)
-                const eventRes = await fetch(`http://localhost:8000/api/events/${eventId}`);
+                const eventRes = await fetch(`${API_BASE_URL}/api/events/${eventId}`);
                 if (eventRes.ok) {
                     const eventData = await eventRes.json();
                     setEvent(eventData);
@@ -35,7 +36,7 @@ export default function EventDetailsPage() {
 
                 // Check registration if user is logged in
                 if (user) {
-                    const ticketsRes = await fetch(`http://localhost:8000/api/tickets/${user.id}`);
+                    const ticketsRes = await fetch(`${API_BASE_URL}/api/tickets/${user.id}`);
                     const tickets = await ticketsRes.json();
                     setIsRegistered(tickets.some((t: any) => t.eventId === eventId));
                 }
@@ -92,8 +93,8 @@ export default function EventDetailsPage() {
                                     {event.category}
                                 </span>
                                 <span className={`px-3 py-1 rounded-full text-xs font-bold border transition-all ${event.status === 'Upcoming' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                                        event.status === 'Today' ? 'bg-primary/20 text-primary border-primary/30 animate-pulse' :
-                                            'bg-white/5 text-dim border-white/10'
+                                    event.status === 'Today' ? 'bg-primary/20 text-primary border-primary/30 animate-pulse' :
+                                        'bg-white/5 text-dim border-white/10'
                                     }`}>
                                     {event.status}
                                 </span>

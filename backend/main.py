@@ -1,7 +1,8 @@
 from fastapi import FastAPI, HTTPException, File, UploadFile, Cookie, Response, Form, Request
-from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 from typing import List, Optional, Dict
 from datetime import datetime, timedelta
@@ -13,7 +14,7 @@ import shutil
 from glob import glob
 
 # Import database and models
-from database import db, migrate_from_json
+from database import db
 from models import (
     Domain, Stat, Meetup, CoreMember, Volunteer, Event, NewsItem, 
     CodeQuestion, Broadcast, Hackathon, RoadmapStep, Resource, Roadmap,
@@ -118,6 +119,21 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Validation Error Logging
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    print(f"DEBUG: Validation Error at {request.url}")
+    print(f"Errors: {json.dumps(exc.errors(), indent=2)}")
+    try:
+        body = await request.json()
+        print(f"Request Body: {json.dumps(body, indent=2)}")
+    except:
+        print("Could not parse request body as JSON")
+    return JSONResponse(
+        status_code=422,
+        content={"detail": exc.errors(), "message": "Validation failed"},
+    )
 
 # Debug Middleware
 @app.middleware("http")
@@ -260,10 +276,18 @@ def get_event_attendance(event_id: int):
 
 @app.post("/api/admin/check-in/manual")
 def manual_checkin(data: CheckIn):
-    # Verify ticket exists
-    ticket = db.find_one("tickets", {"id": data.ticketId})
+    # Try to find ticket
+    ticket = None
+    if data.ticketId:
+        ticket = db.find_one("tickets", {"id": data.ticketId})
+    else:
+        # Fallback using studentId and eventId
+        ticket = db.find_one("tickets", {"userId": data.studentId, "eventId": data.eventId})
+        if ticket:
+            data.ticketId = ticket["id"]
+
     if not ticket:
-        raise HTTPException(status_code=404, detail="Ticket not found")
+        raise HTTPException(status_code=404, detail="Registration/Ticket not found for this user and event")
     
     # Check if already checked in
     if db.find_one("checkins", {"ticketId": data.ticketId}):
@@ -275,11 +299,11 @@ def manual_checkin(data: CheckIn):
     
     db.insert_one("checkins", new_checkin)
     
-    return {"message": "Manual check-in successful"}
+    return {"message": "Manual check-in successful", "studentId": data.studentId}
 
 @app.post("/api/admin/register-student")
 def register_student_to_event(data: dict):
-    user_id = data.get("userId")
+    user_id = data.get("userId") or data.get("studentId")
     event_id = data.get("eventId")
     
     # Verify user exists
@@ -531,12 +555,50 @@ def update_event(event_id: int, event: Event):
         raise HTTPException(status_code=404, detail="Event not found")
     return event
 
+@app.post("/api/events/register")
+def register_for_event(registration: EventRegistration):
+    # Check if user exists
+    user = db.find_one("users", {"id": registration.userId})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Check if event exists
+    event = db.find_one("events", {"id": registration.eventId})
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
+    
+    # Check if already registered
+    existing_ticket = db.find_one("tickets", {"userId": registration.userId, "eventId": registration.eventId})
+    if existing_ticket:
+        raise HTTPException(status_code=400, detail="You are already registered for this event")
+    
+    # Create ticket
+    ticket_id = str(uuid.uuid4())
+    new_ticket = {
+        "id": ticket_id,
+        "userId": registration.userId,
+        "eventId": registration.eventId,
+        "registrationDate": datetime.now().isoformat(),
+        "qrCode": f"TICKET-{ticket_id}"
+    }
+    
+    db.insert_one("tickets", new_ticket)
+    
+    return {"message": "Successfully registered", "ticketId": ticket_id}
+
 # -------------------------------------------------
 # News CRUD
 # -------------------------------------------------
 @app.get("/api/news", response_model=List[NewsItem])
 def get_news():
     return db.find_all("news")
+
+@app.get("/api/news/{news_id}", response_model=NewsItem)
+def get_news_item(news_id: int):
+    news = db.find_one("news", {"id": news_id})
+    if not news:
+        raise HTTPException(status_code=404, detail="News item not found")
+    return news
 
 @app.post("/api/news", response_model=NewsItem)
 def add_news(news: NewsItem):
@@ -918,14 +980,12 @@ def logout(response: Response):
     print(f"✓ Logout successful: Refresh token cookie cleared ({COOKIE_NAME})")
     return {"message": "Logged out successfully"}
 
-@app.get("/api/users/{role}", response_model=List[User])
-def get_users_by_role(role: str):
-    if role.lower() == "all":
-        return db.find_all("users")
-    return db.find_many("users", {"role": role})
-
-@app.get("/api/users")
-def get_all_users():
+@app.get("/api/users", response_model=List[User])
+def get_all_users(role: Optional[str] = None):
+    if role:
+        if role.lower() == "all":
+            return db.find_all("users")
+        return db.find_many("users", {"role": role})
     return db.find_all("users")
 
 @app.get("/api/users/{user_id}")
@@ -935,19 +995,51 @@ def get_user(user_id: str):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
+@app.get("/api/users/role/{role}", response_model=List[User])
+def get_users_by_role_new(role: str):
+    if role.lower() == "all":
+        return db.find_all("users")
+    return db.find_many("users", {"role": role})
+
+# Backward compatible role route (deprecated, move below specific routes)
+@app.get("/api/users/filter/{role}", response_model=List[User])
+def get_users_by_role_deprecated(role: str):
+    return get_users_by_role_new(role)
+
 @app.put("/api/users/{user_id}", response_model=User)
 def update_user(user_id: str, user: User):
     existing_user = db.find_one("users", {"id": user_id})
     if not existing_user:
         raise HTTPException(status_code=404, detail="User not found")
     
-    # Preserve sensitive fields
-    user_data = user.dict()
-    user_data["createdAt"] = existing_user.get("createdAt")
-    user_data["password"] = existing_user.get("password")
+    # Check if username is taken by another user
+    if user.username != existing_user.get("username"):
+        if db.find_one("users", {"username": user.username}):
+            raise HTTPException(status_code=400, detail="Username already exists")
+            
+    # Check if email is taken by another user
+    if user.email != existing_user.get("email"):
+        if db.find_one("users", {"email": user.email}):
+            raise HTTPException(status_code=400, detail="Email already exists")
     
-    db.update_one("users", {"id": user_id}, user_data)
-    return user
+    # Merge data and preserve sensitive/immutable fields
+    updated_data = existing_user.copy()
+    user_dict = user.dict(exclude_unset=True)
+    
+    # Update with new values
+    updated_data.update(user_dict)
+    
+    # Ensure sensitive fields are preserved if they were somehow overwritten
+    updated_data["id"] = user_id
+    updated_data["createdAt"] = existing_user.get("createdAt")
+    updated_data["password"] = existing_user.get("password")
+    
+    db.update_one("users", {"id": user_id}, updated_data)
+    
+    # Fetch the full updated document to be sure
+    final_user = db.find_one("users", {"id": user_id})
+    final_user.pop("_id", None)
+    return User(**final_user)
 
 @app.delete("/api/users/{user_id}")
 def delete_user(user_id: str):
@@ -961,6 +1053,10 @@ def add_user(user: User):
     # Check if username exists
     if db.find_one("users", {"username": user.username}):
         raise HTTPException(status_code=400, detail="Username already exists")
+    
+    # Check if email exists
+    if db.find_one("users", {"email": user.email}):
+        raise HTTPException(status_code=400, detail="Email already exists")
     
     if not user.id:
         user.id = str(uuid.uuid4())
@@ -1022,6 +1118,24 @@ async def get_resume(filename: str):
         return FileResponse(filepath)
     raise HTTPException(status_code=404, detail="Resume not found")
 
+@app.get("/api/users/{user_id}/resume/download")
+async def download_user_resume(user_id: str):
+    user = db.find_one("users", {"id": user_id})
+    if not user or not user.get("resumeUrl"):
+        raise HTTPException(status_code=404, detail="Resume not found")
+    
+    # Extract filename from URL/path
+    filename = os.path.basename(user["resumeUrl"])
+    filepath = os.path.join("uploads/resumes", filename)
+    
+    if os.path.exists(filepath):
+        return FileResponse(
+            filepath, 
+            media_type='application/octet-stream',
+            filename=user.get("resumeName", filename)
+        )
+    raise HTTPException(status_code=404, detail="Resume file missing")
+
 # -------------------------------------------------
 # Initialization
 # -------------------------------------------------
@@ -1031,7 +1145,7 @@ async def startup_event():
     print("Starting up...")
     
     # Migrate data from JSON files if needed
-    migrate_from_json()
+    # migrate_from_json() - Removed as the transition to MongoDB is complete
     
     # Initialize default admin user if not exists
     admin = db.find_one("users", {"username": "admin"})

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard } from "@/app/components/ui/GlassCard";
 import { Plus, Edit2, Trash2, Globe, X, ChevronLeft, Save, ListTodo, Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
+import { API_BASE_URL } from "@/app/config/api";
 
 interface RoadmapStep {
     title: string;
@@ -52,7 +53,7 @@ export default function RoadmapManagerPage() {
 
     const fetchRoadmaps = async () => {
         try {
-            const res = await fetch("http://localhost:8000/api/roadmaps");
+            const res = await fetch(`${API_BASE_URL}/api/roadmaps`);
             const data = await res.json();
             setRoadmaps(data);
         } catch (err) {
@@ -125,8 +126,8 @@ export default function RoadmapManagerPage() {
         e.preventDefault();
         const method = editingItem ? "PUT" : "POST";
         const url = editingItem
-            ? `http://localhost:8000/api/roadmaps/${editingItem.id}`
-            : "http://localhost:8000/api/roadmaps";
+            ? `${API_BASE_URL}/api/roadmaps/${editingItem.id}`
+            : `${API_BASE_URL}/api/roadmaps`;
 
         try {
             const res = await fetch(url, {
@@ -146,7 +147,7 @@ export default function RoadmapManagerPage() {
     const handleDelete = async (id: string) => {
         if (!confirm("Delete this roadmap?")) return;
         try {
-            const res = await fetch(`http://localhost:8000/api/roadmaps/${id}`, { method: "DELETE" });
+            const res = await fetch(`${API_BASE_URL}/api/roadmaps/${id}`, { method: "DELETE" });
             if (res.ok) fetchRoadmaps();
         } catch (err) {
             console.error("Failed to delete roadmap:", err);

@@ -23,6 +23,7 @@ import {
 import Link from "next/link";
 import { GlassCard } from "@/app/components/ui/GlassCard";
 import { useAuth } from "@/app/context/AuthContext";
+import { API_BASE_URL } from "@/app/config/api";
 
 // Leaderboard data will be fetched from the backend
 
@@ -94,7 +95,7 @@ export default function StudentDashboard() {
     useEffect(() => {
         if (user) {
             // Fetch personal progress
-            fetch(`http://localhost:8000/api/progress/${user.id}`)
+            fetch(`${API_BASE_URL}/api/progress/${user.id}`)
                 .then(res => res.json())
                 .then(data => {
                     setProgress(data);
@@ -106,7 +107,7 @@ export default function StudentDashboard() {
                 });
 
             // Fetch global leaderboard
-            fetch("http://localhost:8000/api/leaderboard")
+            fetch(`${API_BASE_URL}/api/leaderboard`)
                 .then(res => res.json())
                 .then(data => {
                     // Ensure data is an array before setting

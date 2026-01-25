@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: 'export',
+  basePath: '/intellexa_user',
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -18,7 +21,9 @@ const nextConfig: NextConfig = {
     ],
   },
   experimental: {
-    allowedDevOrigins: ["192.168.131.155"],
+    serverActions: {
+      allowedOrigins: ["localhost:3000", "192.168.131.155", "192.168.61.155"],
+    },
   },
 };
 

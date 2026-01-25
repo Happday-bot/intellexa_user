@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard } from "@/app/components/ui/GlassCard";
 import { Plus, Edit2, Trash2, Calendar, MapPin, Clock, X, Image as ImageIcon, ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import { API_BASE_URL } from "@/app/config/api";
 
 interface Event {
     id: number;
@@ -40,7 +41,7 @@ export default function EventManagerPage() {
 
     const fetchEvents = async () => {
         try {
-            const res = await fetch("http://localhost:8000/api/events");
+            const res = await fetch(`${API_BASE_URL}/api/events`);
             const data = await res.json();
             setEvents(data);
         } catch (err) {
@@ -74,8 +75,8 @@ export default function EventManagerPage() {
         e.preventDefault();
         const method = editingEvent ? "PUT" : "POST";
         const url = editingEvent
-            ? `http://localhost:8000/api/events/${editingEvent.id}`
-            : "http://localhost:8000/api/events";
+            ? `${API_BASE_URL}/api/events/${editingEvent.id}`
+            : `${API_BASE_URL}/api/events`;
 
         try {
             const res = await fetch(url, {
@@ -95,7 +96,7 @@ export default function EventManagerPage() {
     const handleDelete = async (id: number) => {
         if (!confirm("Are you sure you want to delete this event?")) return;
         try {
-            const res = await fetch(`http://localhost:8000/api/events/${id}`, { method: "DELETE" });
+            const res = await fetch(`${API_BASE_URL}/api/events/${id}`, { method: "DELETE" });
             if (res.ok) fetchEvents();
         } catch (err) {
             console.error("Failed to delete event:", err);

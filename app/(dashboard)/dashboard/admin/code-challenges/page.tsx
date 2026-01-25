@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard } from "@/app/components/ui/GlassCard";
 import { Plus, Edit2, Trash2, Code2, X, Search, ChevronDown, ChevronUp, ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import { API_BASE_URL } from "@/app/config/api";
 
 interface CodeQuestion {
     id: string;
@@ -48,7 +49,7 @@ export default function CodeChallengesManagerPage() {
 
     const fetchChallenges = async () => {
         try {
-            const res = await fetch("http://localhost:8000/api/code-challenges");
+            const res = await fetch(`${API_BASE_URL}/api/code-challenges`);
             const data = await res.json();
             setChallenges(data);
         } catch (err) {
@@ -84,8 +85,8 @@ export default function CodeChallengesManagerPage() {
         e.preventDefault();
         const method = editingItem ? "PUT" : "POST";
         const url = editingItem
-            ? `http://localhost:8000/api/code-challenges/${editingItem.id}`
-            : "http://localhost:8000/api/code-challenges";
+            ? `${API_BASE_URL}/api/code-challenges/${editingItem.id}`
+            : `${API_BASE_URL}/api/code-challenges`;
 
         try {
             const res = await fetch(url, {
@@ -105,7 +106,7 @@ export default function CodeChallengesManagerPage() {
     const handleDelete = async (id: string) => {
         if (!confirm("Are you sure you want to delete this challenge?")) return;
         try {
-            const res = await fetch(`http://localhost:8000/api/code-challenges/${id}`, { method: "DELETE" });
+            const res = await fetch(`${API_BASE_URL}/api/code-challenges/${id}`, { method: "DELETE" });
             if (res.ok) fetchChallenges();
         } catch (err) {
             console.error("Failed to delete challenge:", err);

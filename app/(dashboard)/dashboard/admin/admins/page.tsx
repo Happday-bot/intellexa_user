@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { GlassCard } from "@/app/components/ui/GlassCard";
 import { Trash2, UserPlus, ShieldAlert, Key } from "lucide-react";
+import { API_BASE_URL } from "@/app/config/api";
 
 interface User {
     id: string;
@@ -26,7 +27,7 @@ export default function ManageAdminsPage() {
     });
 
     const fetchAdmins = () => {
-        fetch("http://localhost:8000/api/users?role=admin")
+        fetch(`${API_BASE_URL}/api/users?role=admin`)
             .then(res => res.json())
             .then(data => setAdmins(data))
             .catch(err => console.error("Failed to fetch admins", err));
@@ -39,7 +40,7 @@ export default function ManageAdminsPage() {
     const handleDelete = async (id: string) => {
         if (!confirm("Remove this admin? They will lose access immediately.")) return;
         try {
-            await fetch(`http://localhost:8000/api/users/${id}`, { method: "DELETE" });
+            await fetch(`${API_BASE_URL}/api/users/${id}`, { method: "DELETE" });
             fetchAdmins();
         } catch (err) {
             console.error("Failed to delete user", err);
@@ -49,10 +50,10 @@ export default function ManageAdminsPage() {
     const handleAddAdmin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch("http://localhost:8000/api/users/admin", {
+            const res = await fetch(`${API_BASE_URL}/api/users`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData)
+                body: JSON.stringify({ ...formData, role: "admin" })
             });
 
             if (res.ok) {

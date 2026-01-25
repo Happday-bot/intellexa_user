@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Radio } from "lucide-react";
+import { API_BASE_URL } from "@/app/config/api";
 
 interface Broadcast {
     subject: string;
@@ -33,8 +34,7 @@ export default function BroadcastNotification() {
 
     const fetchActiveBroadcasts = async () => {
         try {
-            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const res = await fetch(`${API_URL}/api/broadcasts`);
+            const res = await fetch(`${API_BASE_URL}/api/broadcasts`);
             const data = await res.json();
 
             // Ensure data is an array

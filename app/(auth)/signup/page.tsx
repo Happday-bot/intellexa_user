@@ -6,6 +6,7 @@ import { GlassCard } from "@/app/components/ui/GlassCard";
 import { Lock, User, Mail, ArrowRight, Loader2, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { API_BASE_URL } from "@/app/config/api";
 
 export default function SignupPage() {
     const router = useRouter();
@@ -25,8 +26,7 @@ export default function SignupPage() {
         setLoading(true);
 
         try {
-            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const res = await fetch(`${API_URL}/api/auth/register`, {
+            const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

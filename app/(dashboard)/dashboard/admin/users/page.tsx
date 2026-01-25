@@ -6,6 +6,7 @@ import { Trash2, Search, User, Edit2, UserPlus, X, ChevronLeft, Mail, Shield } f
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { API_BASE_URL } from "@/app/config/api";
 
 interface Student {
     id: string;
@@ -43,8 +44,7 @@ export default function ManageStudentsPage() {
 
     const fetchStudents = async () => {
         try {
-            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const res = await fetch(`${API_URL}/api/users?role=student`);
+            const res = await fetch(`${API_BASE_URL}/api/users?role=student`);
             const data = await res.json();
             setStudents(data);
         } catch (err) {
@@ -81,11 +81,10 @@ export default function ManageStudentsPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
         const method = editingStudent ? "PUT" : "POST";
         const url = editingStudent
-            ? `${API_URL}/api/users/${editingStudent.id}`
-            : `${API_URL}/api/users`;
+            ? `${API_BASE_URL}/api/users/${editingStudent.id}`
+            : `${API_BASE_URL}/api/users`;
 
         try {
             const res = await fetch(url, {
@@ -106,8 +105,7 @@ export default function ManageStudentsPage() {
         if (!confirm("Are you sure you want to permanently remove this student?")) return;
 
         try {
-            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const res = await fetch(`${API_URL}/api/users/${id}`, { method: "DELETE" });
+            const res = await fetch(`${API_BASE_URL}/api/users/${id}`, { method: "DELETE" });
             if (res.ok) fetchStudents();
         } catch (err) {
             console.error("Failed to delete user", err);
