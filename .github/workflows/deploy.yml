@@ -58,12 +58,30 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
-      - name: Static HTML export with Next.js
-        run: ${{ steps.detect-package-manager.outputs.manager }} run export
+      - name: Static HTML export with Next.js (explicit)
+        run: |
+          echo "Running export script..."
+          if grep -q "\"export\"" package.json; then
+            ${{ steps.detect-package-manager.outputs.manager }} run export
+          else
+            echo "No export script found in package.json, running next build (with output: export config)"
+            ${{ steps.detect-package-manager.outputs.runner }} next build
+          fi
+      - name: Dump build log / dirs for debugging
+        if: always()
+        run: |
+          echo "Project root files:"
+          ls -la
+          echo "Node modules present? (top-level):"
+          if [ -d node_modules ]; then du -sh node_modules || true; else echo "node_modules missing"; fi
+          echo "Next .next dir listing:"
+          ls -la .next || true
+          echo "out dir listing:"
+          ls -la ./out || true
       - name: Check for out directory
         run: |
           if [ ! -d "./out" ]; then
-            echo "::error::out directory not found, build/export may have failed"
+            echo "::error::out directory not found, build/export may have failed. Check logs above."
             exit 1
           fi
       - name: Debug Output
