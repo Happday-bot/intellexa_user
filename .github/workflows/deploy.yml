@@ -50,42 +50,30 @@ jobs:
           cache: ${{ steps.detect-package-manager.outputs.manager }}
       - name: Setup Pages
         uses: actions/configure-pages@v4
-        with:
-          # Automatically inject basePath in your Next.config.ts if it's not present
-          # We already added it manually, but this is a good safety measure.
-          static_site_generator: next
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-      - name: Build with Next.js
-        run: ${{ steps.detect-package-manager.outputs.runner }} next build
-      - name: Static HTML export with Next.js (explicit)
-        run: |
-          echo "Running export script..."
-          if grep -q "\"export\"" package.json; then
-            ${{ steps.detect-package-manager.outputs.manager }} run export
-          else
-            echo "No export script found in package.json, running next build (with output: export config)"
-            ${{ steps.detect-package-manager.outputs.runner }} next build
-          fi
-      - name: Dump build log / dirs for debugging
+      - name: Build and Export
+        run: npm run build
+      - name: Discover Export Directory
         if: always()
         run: |
-          echo "Project root files:"
-          ls -la
-          echo "Node modules present? (top-level):"
-          if [ -d node_modules ]; then du -sh node_modules || true; else echo "node_modules missing"; fi
-          echo "Next .next dir listing:"
-          ls -la .next || true
-          echo "out dir listing:"
-          ls -la ./out || true
+          echo "Listing all files in root (depth 2):"
+          find . -maxdepth 2 -not -path '*/.*'
+          echo "Checking for 'out' or '.next' directories:"
+          if [ -d "./out" ]; then
+            echo "Found ./out directory"
+            ls -la ./out
+          fi
+          if [ -d "./.next" ]; then
+            echo "Found ./.next directory"
+            ls -la ./.next
+          fi
       - name: Check for out directory
         run: |
           if [ ! -d "./out" ]; then
-            echo "::error::out directory not found, build/export may have failed. Check logs above."
+            echo "::error::out directory not found. Please check 'Discover Export Directory' logs above to see what was produced."
             exit 1
           fi
-      - name: Debug Output
-        run: ls -R ./out
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
