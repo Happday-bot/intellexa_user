@@ -1,5 +1,5 @@
 # This workflow will build and deploy a Next.js site to GitHub Pages
-#
+# Triggering new build...
 # To get started with GitHub Pages you can visit: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
 #
 name: Deploy Next.js site to Pages
