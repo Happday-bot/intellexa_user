@@ -883,7 +883,8 @@ def login_endpoint(creds: LoginRequest, response: Response):
     # Set refresh token as HttpOnly cookie (secure, httpOnly, sameSite)
     # Proper cookie settings for automatic transmission with requests
     # In production (Render/GitHub Pages), we MUST use secure=True and samesite="none"
-    is_prod = os.getenv("RENDER") is not None
+    is_prod = os.getenv("RENDER") is not None or os.getenv("PRODUCTION") is not None
+    print(f"DEBUG: Environment detection - RENDER={os.getenv('RENDER')}, PRODUCTION={os.getenv('PRODUCTION')}, is_prod={is_prod}")
     
     response.set_cookie(
         key=COOKIE_NAME,
@@ -951,7 +952,7 @@ def refresh_access_token(response: Response, refresh_token: str = Cookie(None, a
             data={"sub": username, "userId": user["id"]}
         )
         
-        is_prod = os.getenv("RENDER") is not None
+        is_prod = os.getenv("RENDER") is not None or os.getenv("PRODUCTION") is not None
         response.set_cookie(
             key=COOKIE_NAME,
             value=new_refresh_token,
@@ -988,7 +989,7 @@ def auth_refresh(response: Response, refresh_token: str = Cookie(None, alias=COO
 @app.post("/api/auth/logout")
 def logout(response: Response):
     """Logout by clearing the refresh token cookie"""
-    is_prod = os.getenv("RENDER") is not None
+    is_prod = os.getenv("RENDER") is not None or os.getenv("PRODUCTION") is not None
     # Delete cookie with same path and domain it was set with
     response.delete_cookie(
         key=COOKIE_NAME,
