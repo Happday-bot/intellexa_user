@@ -1,0 +1,399 @@
+﻿
+> temp_app@0.1.0 build
+> next build
+
+Ôû▓ Next.js 16.1.1 (Turbopack)
+- Environments: .env.local
+- Experiments (use with caution):
+  ┬À serverActions
+
+  Creating an optimized production build ...
+node.exe : 
+At line:1 char:1
++ & "C:\Users\lenovo\scoop\ap
+ps\nodejs-lts\current/node.ex
+e" "C:\Users\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: (:String  
+  ) [], RemoteException
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+> Build error occurred
+Error: Turbopack build 
+failed with 2 errors:
+./app/(public)/events/[id]/pa
+ge.tsx:17:8
+Next.js can't recognize the 
+exported 
+`generateStaticParams` field 
+in route. App pages cannot 
+use both "use client" and 
+export function 
+"generateStaticParams()".
+[0m [90m 15 |[39m 
+[36mimport[39m { 
+[33mAPI_BASE_URL[39m } 
+[36mfrom[39m [32m"@/app/co
+nfig/api"[39m[33m;[39m
+ [90m 16 |[39m
+[31m[1m>[22m[39m[90m 17 
+|[39m [36mexport[39m 
+[36masync[39m 
+[36mfunction[39m 
+generateStaticParams() {
+ [90m    |[39m        [31m
+[1m^[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[39m[3
+1m[1m^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[31m[1
+m^[22m[39m[31m[1m^[22m[
+39m[31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[1m^[2
+2m[39m[31m[1m^[22m[39m[
+31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[22m[3
+9m[31m[1m^[22m[39m[31m[
+1m^[22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[39m[3
+1m[1m^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 18 
+|[39m     [36mreturn[39m 
+events[33m.[39mmap((event) 
+[33m=>[39m ({
+ [90m    |[39m [31m[1m^[
+22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[31m[1
+m^[22m[39m[31m[1m^[22m[
+39m[31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[1m^[2
+2m[39m[31m[1m^[22m[39m[
+31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[22m[3
+9m[31m[1m^[22m[39m[31m[
+1m^[22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[39m[3
+1m[1m^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 19 
+|[39m         id[33m:[39m 
+event[33m.[39mid[33m.[39m
+toString()[33m,[39m
+ [90m    |[39m [31m[1m^[
+22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[31m[1
+m^[22m[39m[31m[1m^[22m[
+39m[31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[1m^[2
+2m[39m[31m[1m^[22m[39m[
+31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[22m[3
+9m[31m[1m^[22m[39m[31m[
+1m^[22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[39m[3
+1m[1m^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 20 
+|[39m     }))[33m;[39m
+ [90m    |[39m [31m[1m^[
+22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[31m[1
+m^[22m[39m[31m[1m^[22m[
+39m[31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[1m^[2
+2m[39m[31m[1m^[22m[39m[
+31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[22m[3
+9m[31m[1m^[22m[39m[31m[
+1m^[22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[39m[3
+1m[1m^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 21 
+|[39m }
+ [90m    |[39m [31m[1m^[
+22m[39m[31m[1m^[22m[39m
+ [90m 22 |[39m
+ [90m 23 |[39m 
+[36mexport[39m 
+[36mdefault[39m 
+[36mfunction[39m 
+[33mEventDetailsPage[39m() 
+{
+ [90m 24 |[39m     
+[36mconst[39m params 
+[33m=[39m 
+useParams()[33m;[39m[0m
+
+The exported configuration 
+object in a source file 
+needs to have a very 
+specific format from which 
+some properties can be 
+statically parsed at 
+compiled-time.
+
+Import traces:
+  Client Component Browser:
+    ./app/(public)/events/[id
+]/page.tsx [Client Component 
+Browser]
+    ./app/(public)/events/[id
+]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(public)/events/[id
+]/page.tsx [Client Component 
+SSR]
+    ./app/(public)/events/[id
+]/page.tsx [Server Component]
+
+https://nextjs.org/docs/app/a
+pi-reference/file-conventions
+/route-segment-config
+
+
+./app/(public)/news/[id]/page
+.tsx:13:8
+Next.js can't recognize the 
+exported 
+`generateStaticParams` field 
+in route. App pages cannot 
+use both "use client" and 
+export function 
+"generateStaticParams()".
+[0m [90m 11 |[39m 
+[36mimport[39m { newsItems 
+} [36mfrom[39m [32m"@/app/
+data/newsData"[39m[33m;[39
+m
+ [90m 12 |[39m
+[31m[1m>[22m[39m[90m 13 
+|[39m [36mexport[39m 
+[36masync[39m 
+[36mfunction[39m 
+generateStaticParams() {
+ [90m    |[39m        [31m
+[1m^[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[39m[3
+1m[1m^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[31m[1
+m^[22m[39m[31m[1m^[22m[
+39m[31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[1m^[2
+2m[39m[31m[1m^[22m[39m[
+31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[22m[3
+9m[31m[1m^[22m[39m[31m[
+1m^[22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[39m[3
+1m[1m^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 14 
+|[39m     [36mreturn[39m n
+ewsItems[33m.[39mmap((news)
+ [33m=>[39m ({
+ [90m    |[39m [31m[1m^[
+22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[31m[1
+m^[22m[39m[31m[1m^[22m[
+39m[31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[1m^[2
+2m[39m[31m[1m^[22m[39m[
+31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[22m[3
+9m[31m[1m^[22m[39m[31m[
+1m^[22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[39m[3
+1m[1m^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[31m[1
+m^[22m[39m[31m[1m^[22m[
+39m
+[31m[1m>[22m[39m[90m 15 
+|[39m         id[33m:[39m 
+news[33m.[39mid[33m.[39mt
+oString()[33m,[39m
+ [90m    |[39m [31m[1m^[
+22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[31m[1
+m^[22m[39m[31m[1m^[22m[
+39m[31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[1m^[2
+2m[39m[31m[1m^[22m[39m[
+31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[22m[3
+9m[31m[1m^[22m[39m[31m[
+1m^[22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[39m[3
+1m[1m^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[31m[1
+m^[22m[39m[31m[1m^[22m[
+39m
+[31m[1m>[22m[39m[90m 16 
+|[39m     }))[33m;[39m
+ [90m    |[39m [31m[1m^[
+22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[31m[1
+m^[22m[39m[31m[1m^[22m[
+39m[31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[1m^[2
+2m[39m[31m[1m^[22m[39m[
+31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[22m[3
+9m[31m[1m^[22m[39m[31m[
+1m^[22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[39m[3
+1m[1m^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[31m[1
+m^[22m[39m[31m[1m^[22m[
+39m
+[31m[1m>[22m[39m[90m 17 
+|[39m }
+ [90m    |[39m [31m[1m^[
+22m[39m[31m[1m^[22m[39m
+ [90m 18 |[39m
+ [90m 19 |[39m 
+[36mexport[39m 
+[36mdefault[39m 
+[36mfunction[39m 
+[33mNewsDetailsPage[39m() {
+ [90m 20 |[39m     
+[36mconst[39m params 
+[33m=[39m 
+useParams()[33m;[39m[0m
+
+The exported configuration 
+object in a source file 
+needs to have a very 
+specific format from which 
+some properties can be 
+statically parsed at 
+compiled-time.
+
+Import traces:
+  Client Component Browser:
+    ./app/(public)/news/[id]/
+page.tsx [Client Component 
+Browser]
+    ./app/(public)/news/[id]/
+page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(public)/news/[id]/
+page.tsx [Client Component 
+SSR]
+    ./app/(public)/news/[id]/
+page.tsx [Server Component]
+
+https://nextjs.org/docs/app/a
+pi-reference/file-conventions
+/route-segment-config
+
+
+    at <unknown> (./app/(publ
+ic)/events/[id]/page.tsx:17:8
+)
+    at <unknown> (https://nex
+tjs.org/docs/app/api-referenc
+e/file-conventions/route-segm
+ent-config)
+    at <unknown> (./app/(publ
+ic)/news/[id]/page.tsx:13:8)
+    at <unknown> (https://nex
+tjs.org/docs/app/api-referenc
+e/file-conventions/route-segm
+ent-config)

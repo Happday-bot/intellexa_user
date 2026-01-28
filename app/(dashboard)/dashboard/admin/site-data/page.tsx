@@ -90,7 +90,7 @@ export default function SiteDataManagerPage() {
     const handleDelete = async (type: Section, id: string | number) => {
         if (!confirm(`Delete this ${type.slice(0, -1)}?`)) return;
         try {
-            const res = await fetch(`${API_BASE_URL}/api/${type}/${id}`, { method: "DELETE" });
+            const res = await fetch(`${API_BASE_URL}/api/${type}/${encodeURIComponent(String(id))}`, { method: "DELETE" });
             if (res.ok) fetchAllData();
         } catch (err) {
             console.error(`Failed to delete ${type}:`, err);
@@ -163,14 +163,19 @@ export default function SiteDataManagerPage() {
                 return (
                     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {data.stats.map((stat, i) => (
-                            <GlassCard key={i} className="p-6 text-center group">
+                            <GlassCard key={i} className="p-6 text-center group relative">
                                 <div className="text-3xl font-black text-secondary mb-1">{stat.value}</div>
                                 <div className="text-xs uppercase tracking-widest font-bold text-dim mb-4">{stat.label}</div>
                                 <div className="flex justify-center gap-2">
-                                    <button onClick={() => handleOpenModal('stats', stat)} className="p-2.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"><Edit2 className="w-4 h-4" /></button>
+                                    <button onClick={() => handleOpenModal('stats', stat)} className="p-2.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors" title="Edit Stat"><Edit2 className="w-4 h-4" /></button>
+                                    <button onClick={() => handleDelete('stats', stat.label)} className="p-2.5 rounded-lg bg-red-500/5 hover:bg-red-500/20 text-red-500/50 hover:text-red-500 transition-colors" title="Delete Stat"><Trash2 className="w-4 h-4" /></button>
                                 </div>
                             </GlassCard>
                         ))}
+                        <button onClick={() => handleOpenModal('stats')} className="border-2 border-dashed border-white/10 rounded-3xl p-6 flex flex-col items-center justify-center gap-2 hover:border-secondary/50 hover:bg-secondary/5 transition-all group min-h-[140px]">
+                            <Plus className="w-6 h-6 text-dim group-hover:text-secondary group-hover:scale-110 transition-transform" />
+                            <span className="text-xs font-bold text-dim group-hover:text-secondary uppercase tracking-widest">Add New Stat</span>
+                        </button>
                     </div>
                 );
             case "meetups":

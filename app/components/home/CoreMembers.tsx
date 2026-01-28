@@ -83,7 +83,7 @@ export function CoreMembers() {
                     <GlassCard className="p-4 border-primary/20 bg-primary/5">
                         <div className="relative w-full h-[300px] md:h-[500px] rounded-xl overflow-hidden group">
                             <Image
-                                src="/assets/core.jpg"
+                                src="/intellexa_user/assets/core.jpg"
                                 alt="Intellexa Core Team Group Photo"
                                 fill
                                 className="object-cover group-hover:scale-105 transition-transform duration-700"

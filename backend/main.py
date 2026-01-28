@@ -108,12 +108,13 @@ COOKIE_DOMAIN = None  # Set to your domain in production
 # -------------------------------------------------
 app.add_middleware(
     CORSMiddleware,
-    # Allow specific origins for credentials to work. Add your specific IP if needed.
+    # These are the FRONTEND websites allowed to talk to this backend
     allow_origins=[
-        "http://localhost:3000", 
+        "http://localhost:3000",
         "http://127.0.0.1:3000",
+        "http://192.168.108.155:3000",
         "http://192.168.131.155:3000",
-        "http://192.168.131.155" # Just in case it's on port 80/custom
+        "https://happday-bot.github.io", # Your GitHub Pages site
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -164,7 +165,7 @@ def test():
     }
 
 @app.get("/api/debug/cookies")
-def debug_cookies(request):
+def debug_cookies(request: Request):
     """Debug endpoint to check if cookies are being received"""
     cookies = request.cookies
     return {
@@ -369,12 +370,10 @@ def get_stats():
     core_team_count = db.count_documents("core_members")
     volunteer_count = db.count_documents("volunteers")
     
-    return [
-        {"label": "Active Users", "value": f"{active_users:,}", "icon": "Users"},
-        {"label": "Core Team", "value": str(core_team_count), "icon": "Shield"},
-        {"label": "Volunteers", "value": str(volunteer_count), "icon": "UserPlus"},
-        {"label": "Success Rate", "value": "98%", "icon": "Zap"}
-    ]
+    # Custom Stats from DB
+    db_stats = db.find_all("stats")
+    
+    return db_stats
 
 @app.post("/api/stats", response_model=Stat)
 def add_stat(stat: Stat):
@@ -383,16 +382,29 @@ def add_stat(stat: Stat):
 
 @app.delete("/api/stats/{label}")
 def delete_stat(label: str):
+    # Don't allow deleting dynamic stats via this API if we want to protect them
+    # But usually, the admin should be able to manage them if they are in DB
     result = db.delete_one("stats", {"label": label})
-    if result == 0:
-        raise HTTPException(status_code=404, detail="Stat not found")
-    return {"message": "Stat deleted"}
+    # We return success even if 0 documents were deleted to be idempotent, 
+    # but for stats specifically, we might want to know if it existed.
+    return {"message": "Stat deleted", "count": result}
 
 @app.put("/api/stats/{label}", response_model=Stat)
 def update_stat(label: str, stat: Stat):
-    result = db.update_one("stats", {"label": label}, stat.dict())
-    if result == 0:
-        raise HTTPException(status_code=404, detail="Stat not found")
+    # Use replace_one or update_one with upsert if possible, 
+    # but database.py update_one doesn't support upsert yet.
+    # So we check existence or just perform update.
+    
+    # The issue reported was 404 if not found or not modified.
+    # Let's check if it exists first.
+    existing = db.find_one("stats", {"label": label})
+    
+    stat_data = stat.dict()
+    if existing:
+        db.update_one("stats", {"label": label}, stat_data)
+    else:
+        db.insert_one("stats", stat_data)
+        
     return stat
 
 # -------------------------------------------------
@@ -870,13 +882,16 @@ def login_endpoint(creds: LoginRequest, response: Response):
     
     # Set refresh token as HttpOnly cookie (secure, httpOnly, sameSite)
     # Proper cookie settings for automatic transmission with requests
+    # In production (Render/GitHub Pages), we MUST use secure=True and samesite="none"
+    is_prod = os.getenv("RENDER") is not None
+    
     response.set_cookie(
         key=COOKIE_NAME,
         value=refresh_token_str,
         max_age=REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60,  # 7 days
         httponly=True,  # Not accessible via JavaScript - XSS protection
-        secure=False,  # Set to True in production with HTTPS
-        samesite="lax",  # CSRF protection
+        secure=True if is_prod else False,  # MUST be True for SameSite=None
+        samesite="none" if is_prod else "lax",  # REQUIRED for cross-site cookies
         path=COOKIE_PATH,  # Root path so it's available everywhere
         domain=COOKIE_DOMAIN  # All subdomains if None
     )
@@ -935,13 +950,15 @@ def refresh_access_token(response: Response, refresh_token: str = Cookie(None, a
         new_refresh_token = create_refresh_token(
             data={"sub": username, "userId": user["id"]}
         )
+        
+        is_prod = os.getenv("RENDER") is not None
         response.set_cookie(
             key=COOKIE_NAME,
             value=new_refresh_token,
             max_age=REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60,
             httponly=True,
-            secure=False,
-            samesite="lax",
+            secure=True if is_prod else False,
+            samesite="none" if is_prod else "lax",
             path=COOKIE_PATH,
             domain=COOKIE_DOMAIN
         )
@@ -971,11 +988,14 @@ def auth_refresh(response: Response, refresh_token: str = Cookie(None, alias=COO
 @app.post("/api/auth/logout")
 def logout(response: Response):
     """Logout by clearing the refresh token cookie"""
+    is_prod = os.getenv("RENDER") is not None
     # Delete cookie with same path and domain it was set with
     response.delete_cookie(
         key=COOKIE_NAME,
         path=COOKIE_PATH,
-        domain=COOKIE_DOMAIN
+        domain=COOKIE_DOMAIN,
+        secure=True if is_prod else False,
+        samesite="none" if is_prod else "lax"
     )
     print(f"✓ Logout successful: Refresh token cookie cleared ({COOKIE_NAME})")
     return {"message": "Logged out successfully"}

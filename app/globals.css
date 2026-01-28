@@ -22,6 +22,24 @@
   /* Tailwind mappings */
   --background: var(--bg-dark);
   --foreground: var(--text-main);
+
+  /* Native Custom Shard Cursor - Solid Orange */
+  --cursor-default: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><path d='M2 2L30 14L14 16L12 30L2 2Z' fill='%23ff8c00' stroke='white' stroke-width='1'/><path d='M2 2L14 16' stroke='white' stroke-width='1' stroke-opacity='0.3'/></svg>") 0 0, auto;
+  --cursor-pointer: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><path d='M2 2L30 14L14 16L12 30L2 2Z' fill='%23ff8c00' stroke='white' stroke-width='2'/><path d='M2 2L14 16' stroke='white' stroke-width='1.5' stroke-opacity='0.8'/></svg>") 0 0, pointer;
+}
+
+* {
+  cursor: var(--cursor-default);
+}
+
+a,
+button,
+[role="button"],
+input[type="submit"],
+input[type="button"],
+select,
+textarea {
+  cursor: var(--cursor-pointer);
 }
 
 @theme inline {

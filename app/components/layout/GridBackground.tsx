@@ -8,12 +8,12 @@ export function GridBackground() {
 
     // Festival background images mapping
     const festivalBackgrounds: Record<string, string> = {
-        "Pongal": "/assets/festivals/pongal_kolam_1767586362272.png",
-        "Holi": "/assets/festivals/holi_colors_1767586399391.png",
-        "Independence Day": "/assets/festivals/indian_flag_1767586416588.png",
-        "Diwali": "/assets/festivals/diya_lamp_1767586381922.png",
-        "Children's Day": "/assets/festivals/balloon_colorful_1767586442164.png",
-        "Christmas": "/assets/festivals/snowflake_christmas_1767586459617.png",
+        "Pongal": "/intellexa_user/assets/festivals/pongal_kolam_1767586362272.png",
+        "Holi": "/intellexa_user/assets/festivals/holi_colors_1767586399391.png",
+        "Independence Day": "/intellexa_user/assets/festivals/indian_flag_1767586416588.png",
+        "Diwali": "/intellexa_user/assets/festivals/diya_lamp_1767586381922.png",
+        "Children's Day": "/intellexa_user/assets/festivals/balloon_colorful_1767586442164.png",
+        "Christmas": "/intellexa_user/assets/festivals/snowflake_christmas_1767586459617.png",
     };
 
     const backgroundImage = theme && festivalBackgrounds[theme.name];
