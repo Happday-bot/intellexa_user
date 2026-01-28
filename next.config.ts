@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: 'export',
   basePath: '/intellexa_user',
   trailingSlash: true,
   images: {
