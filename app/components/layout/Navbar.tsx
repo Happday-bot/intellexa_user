@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -23,9 +23,28 @@ import { useAuth } from "@/app/context/AuthContext";
 export function Navbar() {
     const pathname = usePathname();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [currentHash, setCurrentHash] = useState("");
     const { user, logout, isLoading } = useAuth();
 
     const dashboardLink = user?.role === 'admin' ? '/dashboard/admin' : '/dashboard/student';
+
+    useEffect(() => {
+        const updateHash = () => setCurrentHash(window.location.hash || "");
+        updateHash();
+        window.addEventListener("hashchange", updateHash);
+        return () => window.removeEventListener("hashchange", updateHash);
+    }, []);
+
+    const isActive = (href: string) => {
+        const [hrefPath = "/", hrefHash] = href.split("#");
+        const currentPath = pathname === "/" ? "/" : pathname.replace(/\/+$/, "");
+        const targetPath = hrefPath === "/" ? "/" : hrefPath.replace(/\/+$/, "");
+
+        if (hrefHash) return currentPath === targetPath && currentHash === `#${hrefHash}`;
+        if (targetPath === "/") return currentPath === "/";
+
+        return currentPath === targetPath || currentPath.startsWith(`${targetPath}/`);
+    };
 
     return (
         <motion.nav
@@ -45,8 +64,8 @@ export function Navbar() {
                             key={link.href}
                             href={link.href}
                             className={cn(
-                                "text-sm font-medium transition-colors hover:text-white",
-                                pathname === link.href ? "text-accent" : "text-dim"
+                                "text-sm font-medium transition-colors",
+                                isActive(link.href) ? "text-accent hover:text-accent" : "text-dim hover:text-white"
                             )}
                         >
                             {link.name}
@@ -106,8 +125,10 @@ export function Navbar() {
                                 href={link.href}
                                 onClick={() => setIsMobileMenuOpen(false)}
                                 className={cn(
-                                    "px-4 py-3 rounded-xl font-medium transition-colors hover:bg-white/5",
-                                    pathname === link.href ? "bg-primary/10 text-primary" : "text-dim"
+                                    "px-4 py-3 rounded-xl font-medium transition-colors",
+                                    isActive(link.href)
+                                        ? "bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary"
+                                        : "text-dim hover:bg-white/5"
                                 )}
                             >
                                 {link.name}
